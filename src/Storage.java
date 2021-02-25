@@ -34,7 +34,7 @@ public class Storage {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        } else saveKeys();
     }
 
     public static void saveKeys() {
