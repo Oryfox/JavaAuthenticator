@@ -3,10 +3,12 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Storage {
 
-    static ArrayList<KeyItem> keys = new ArrayList<>();
+    static List<KeyItem> keys = new ArrayList<>();
 
     private static final File home = new File(System.getProperty("user.home") + "/.oryfox/java-authenticator");
     private static final File keysJSON = new File(home.getAbsolutePath() + "/keys.json");
@@ -59,5 +61,22 @@ public class Storage {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void addKey(String title, String account, String key) {
+        keys.add(new KeyItem(title,account,key));
+        saveKeys();
+        Collections.sort(keys);
+    }
+
+    public static void addKey(KeyItem keyItem) {
+        keys.add(keyItem);
+        saveKeys();
+        Collections.sort(keys);
+    }
+
+    public static void removeKey(KeyItem keyItem) {
+        keys.remove(keyItem);
+        saveKeys();
     }
 }

@@ -1,4 +1,4 @@
-public class KeyItem {
+public class KeyItem implements Comparable {
 
     String title; //Platform or whatever
     String account ; //Username or E-Mail
@@ -8,5 +8,10 @@ public class KeyItem {
         this.title = title;
         this.account = account;
         this.key = key;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.title.compareTo(((KeyItem)o).title);
     }
 }
