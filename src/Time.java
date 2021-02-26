@@ -8,6 +8,6 @@ public class Time {
 
     public static int getRemainingTime() {
         long time = getSystemTime();
-        return (int) (time % Math.floorDiv(time, 30));
+        return (int) (30 - time % 30);
     } //Time until next reset. 30s period
 }

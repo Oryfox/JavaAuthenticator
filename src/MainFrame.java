@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainFrame extends JFrame {
 
     private JPanel basePanel;
+    private JPanel codesPanel;
 
     public MainFrame() {
         super("Java Authenticator");
@@ -41,7 +42,8 @@ public class MainFrame extends JFrame {
         new Thread(() -> {
             while (startRemaining.get() >= 1) {
                 try {
-                    Thread.sleep(1000);
+                    //noinspection BusyWait
+                    Thread.sleep(1000); //While program works this loop will never be cancelled so noinspection here
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -57,17 +59,22 @@ public class MainFrame extends JFrame {
 
         panel.add(label);
 
+        JButton addNew = new JButton("Add new secret");
+        addNew.addActionListener(e -> codesPanel.add(new KeyItem(),0));
+
+        panel.add(addNew);
+
         return panel;
     }
 
     private JScrollPane codesPanel() {
-        JPanel panel = new JPanel(new GridLayout(0,1));
-        panel.setOpaque(false);
-        ((GridLayout)panel.getLayout()).setVgap(10);
+        codesPanel = new JPanel(new GridLayout(0,1));
+        codesPanel.setOpaque(false);
+        ((GridLayout)codesPanel.getLayout()).setVgap(10);
 
-        for (KeyItem item : Storage.keys) panel.add(item);
+        for (KeyItem item : Storage.keys) codesPanel.add(item);
 
-        JScrollPane scrollPane = new JScrollPane(panel);
+        JScrollPane scrollPane = new JScrollPane(codesPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
