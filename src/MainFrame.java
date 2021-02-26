@@ -43,19 +43,19 @@ public class MainFrame extends JFrame {
         label.setFont(new Font("Helvetica", Font.PLAIN, 18));
 
         new Thread(() -> {
-            while (startRemaining.get() >= 0) {
+            while (true) {
                 try {
                     //noinspection BusyWait
                     Thread.sleep(1000); //While program works this loop will never be cancelled so noinspection here
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                label.setText("Remaining time: " + startRemaining.decrementAndGet());
                 if (startRemaining.get() == 30) {
                     for (KeyItem item : Storage.keys) item.updateVerificationCode();
                 }
-                if (startRemaining.get() == 1) {
-                    startRemaining.set(31);
+                label.setText("Remaining time: " + startRemaining.decrementAndGet());
+                if (startRemaining.get() <= 0) {
+                    startRemaining.set(30);
                 }
             }
         }).start();
