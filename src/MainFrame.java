@@ -12,6 +12,8 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(400,600);
 
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("icons/lock.png")));
+
         JPanel basePanel = new JPanel(new GridBagLayout());
         basePanel.setBackground(Color.white);
 
@@ -21,6 +23,7 @@ public class MainFrame extends JFrame {
         this.add(basePanel);
 
         this.setVisible(true);
+        if (Authenticator.demo) JOptionPane.showMessageDialog(this, "You see demo keys \n These are not real codes or accounts", "Demo", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private JPanel topPanel() {

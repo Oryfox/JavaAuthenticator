@@ -9,7 +9,7 @@ public class Storage {
 
     static List<KeyItem> keys = new ArrayList<>();
 
-    private static final File home = new File(System.getProperty("user.home") + "/.oryfox/java-authenticator");
+    private static final File home = new File(System.getProperty("user.home") + "/.github-oryfox/java-authenticator");
     private static final File keysJSON = new File(home.getAbsolutePath() + "/keys.json");
 
     public static void loadKeys() {
@@ -40,6 +40,10 @@ public class Storage {
         if (!home.exists()) {
             //noinspection ResultOfMethodCallIgnored
             home.mkdirs();
+            keys.add(new KeyItem("OryMail", "random.guy@orymail.com", "JBSWY3DPEHPK3PXP"));
+            keys.add(new KeyItem("Aurora Merchandise Store", "obsessed.fan@orymail.com", "SIHGDFNADKGEMGLF"));
+            keys.add(new KeyItem("SocialCollection","listen-to.chuchyard@byAurora.now","8DFMOFUPASDGHNWE"));
+            Authenticator.demo = true;
         }
         JSONObject rootObject = new JSONObject();
         JSONArray keyArray = new JSONArray();

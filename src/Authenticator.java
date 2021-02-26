@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.IOException;
 
 public class Authenticator {
+    static boolean demo;
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
