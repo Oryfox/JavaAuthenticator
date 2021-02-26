@@ -3,7 +3,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Storage {
@@ -46,11 +45,13 @@ public class Storage {
         JSONArray keyArray = new JSONArray();
         JSONObject current;
         for (KeyItem item : keys) {
-            current = new JSONObject();
-            current.put("title", item.title);
-            current.put("account", item.account);
-            current.put("key", item.key);
-            keyArray.put(current);
+            if (!item.editMode) {
+                current = new JSONObject();
+                current.put("title", item.title);
+                current.put("account", item.account);
+                current.put("key", item.key);
+                keyArray.put(current);
+            }
         }
         rootObject.put("keys", keyArray);
 
@@ -61,22 +62,5 @@ public class Storage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void addKey(String title, String account, String key) {
-        keys.add(new KeyItem(title,account,key));
-        saveKeys();
-        Collections.sort(keys);
-    }
-
-    public static void addKey(KeyItem keyItem) {
-        keys.add(keyItem);
-        saveKeys();
-        Collections.sort(keys);
-    }
-
-    public static void removeKey(KeyItem keyItem) {
-        keys.remove(keyItem);
-        saveKeys();
     }
 }

@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class KeyItem extends JPanel implements Comparable<KeyItem> {
@@ -10,11 +10,24 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
     String account ; //Username or E-Mail
     String key; //Secret
 
+    JLabel titleLabel;
+    JLabel accountLabel;
     JLabel verificationCodeLabel;
 
-    static Font font = new Font("Arial", Font.PLAIN, 16);
+    JPanel backButton;
+    JPanel qrCodeButton;
+    JPanel editButton;
+    JPanel removeButton;
+    JPanel copyButton;
+
+    JTextField titleField;
+    JTextField accountField;
+    JTextField secretField;
 
     boolean editMode = false;
+
+
+    static Font font = new Font("Arial", Font.PLAIN, 16);
 
     public KeyItem(String title, String account, String key) {
         this.title = title;
@@ -27,21 +40,98 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
         this.setPreferredSize(new Dimension(0,80));
         this.setBorder(BorderFactory.createEmptyBorder(5,15,5,15));
 
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(font);
-        this.add(titleLabel);
+        {
+            titleLabel = new JLabel(title);
+            titleLabel.setFont(font);
+            this.add(titleLabel);
 
-        JLabel accountLabel = new JLabel(account);
-        accountLabel.setFont(font);
-        this.add(accountLabel);
+            accountLabel = new JLabel(account);
+            accountLabel.setFont(font);
+            this.add(accountLabel);
 
-        verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
-        verificationCodeLabel.setFont(font);
-        this.add(verificationCodeLabel);
+            verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
+            verificationCodeLabel.setFont(font);
+            this.add(verificationCodeLabel);
+        } //Labels
+
+        {
+            titleField = new JTextField();
+            titleField.setFont(font);
+
+            accountField = new JTextField();
+            accountField.setFont(font);
+
+            secretField = new JTextField();
+            secretField.setFont(font);
+
+            titleField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
+                }
+            });
+            accountField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
+                }
+            });
+            secretField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
+                }
+            });
+        } //Fields
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showButtons();
+            }
+        });
     }
 
     public KeyItem() {
-        KeyItem self = this;
         editMode = true;
         this.setOpaque(false);
 
@@ -49,124 +139,93 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
         this.setPreferredSize(new Dimension(0,80));
         this.setBorder(BorderFactory.createEmptyBorder(5,15,5,15));
 
-        JTextField titleField = new JTextField();
-        titleField.setFont(font);
-        this.add(titleField);
+        {
+            titleLabel = new JLabel();
+            titleLabel.setFont(font);
 
-        JTextField accountField = new JTextField();
-        accountField.setFont(font);
-        this.add(accountField);
+            accountLabel = new JLabel();
+            accountLabel.setFont(font);
 
-        JTextField secretField = new JTextField();
-        secretField.setFont(font);
-        this.add(secretField);
+            verificationCodeLabel = new JLabel();
+            verificationCodeLabel.setFont(font);
+        } //Labels
 
-        titleField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
+        {
+            titleField = new JTextField();
+            titleField.setFont(font);
+            this.add(titleField);
 
-            }
+            accountField = new JTextField();
+            accountField.setFont(font);
+            this.add(accountField);
 
-            @Override
-            public void keyPressed(KeyEvent e) {
+            secretField = new JTextField();
+            secretField.setFont(font);
+            this.add(secretField);
 
-            }
+            titleField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                title = titleField.getText();
-                if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
-                    self.remove(titleField);
-                    self.remove(accountField);
-                    self.remove(secretField);
-
-                    JLabel titleLabel = new JLabel(title);
-                    titleLabel.setFont(font);
-                    self.add(titleLabel);
-
-                    JLabel accountLabel = new JLabel(account);
-                    accountLabel.setFont(font);
-                    self.add(accountLabel);
-
-                    verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
-                    verificationCodeLabel.setFont(font);
-                    self.add(verificationCodeLabel);
-                    editMode = false;
-                    Storage.keys.add(self);
-                    Storage.saveKeys();
                 }
-            }
-        });
-        accountField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
 
-            }
+                @Override
+                public void keyPressed(KeyEvent e) {
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                account = accountField.getText();
-                if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
-                    self.remove(titleField);
-                    self.remove(accountField);
-                    self.remove(secretField);
-
-                    JLabel titleLabel = new JLabel(title);
-                    titleLabel.setFont(font);
-                    self.add(titleLabel);
-
-                    JLabel accountLabel = new JLabel(account);
-                    accountLabel.setFont(font);
-                    self.add(accountLabel);
-
-                    verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
-                    verificationCodeLabel.setFont(font);
-                    self.add(verificationCodeLabel);
-                    editMode = false;
-                    Storage.keys.add(self);
-                    Storage.saveKeys();
                 }
-            }
-        });
-        secretField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
 
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                key = secretField.getText();
-                if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
-                    self.remove(titleField);
-                    self.remove(accountField);
-                    self.remove(secretField);
-
-                    JLabel titleLabel = new JLabel(title);
-                    titleLabel.setFont(font);
-                    self.add(titleLabel);
-
-                    JLabel accountLabel = new JLabel(account);
-                    accountLabel.setFont(font);
-                    self.add(accountLabel);
-
-                    verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
-                    verificationCodeLabel.setFont(font);
-                    self.add(verificationCodeLabel);
-                    editMode = false;
-                    Storage.keys.add(self);
-                    Storage.saveKeys();
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
                 }
+            });
+            accountField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
+                }
+            });
+            secretField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                        changeEditMode();
+                        Storage.saveKeys();
+                    }
+                }
+            });
+        } //TextFields
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showButtons();
             }
         });
     }
@@ -185,5 +244,239 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
     public void updateVerificationCode() {
         if (!editMode) verificationCodeLabel.setText(Generator.getVerificationCode(key));
+    }
+
+    public void changeEditMode() {
+        this.editMode = !this.editMode;
+        if (editMode) {
+            this.remove(titleLabel);
+            this.remove(accountLabel);
+            this.remove(verificationCodeLabel);
+
+            titleField.setText(titleLabel.getText());
+            accountField.setText(accountLabel.getText());
+            secretField.setText(key);
+
+            this.add(titleField);
+            this.add(accountField);
+            this.add(secretField);
+        } else {
+            this.remove(titleField);
+            this.remove(accountField);
+            this.remove(secretField);
+
+            titleLabel.setText(title = titleField.getText());
+            accountLabel.setText(account = accountField.getText());
+            verificationCodeLabel.setText(Generator.getVerificationCode(key = secretField.getText()));
+
+            this.add(titleLabel);
+            this.add(accountLabel);
+            this.add(verificationCodeLabel);
+        }
+        this.updateUI();
+    }
+
+    public void showButtons() {
+        if (!editMode) {
+            ((GridLayout)this.getLayout()).setRows(1);
+            ((GridLayout)this.getLayout()).setColumns(0);
+            this.remove(titleLabel);
+            this.remove(accountLabel);
+            this.remove(verificationCodeLabel);
+
+            this.add(backButton = ActionButton.back(this));
+            this.add(copyButton = ActionButton.copy(this));
+            this.add(editButton = ActionButton.edit(this));
+            this.add(removeButton = ActionButton.remove(this));
+
+            this.updateUI();
+        }
+    }
+
+    public void hideButtons() {
+        ((GridLayout)this.getLayout()).setColumns(1);
+        ((GridLayout)this.getLayout()).setRows(0);
+        this.remove(backButton);
+        this.remove(copyButton);
+        this.remove(editButton);
+        this.remove(removeButton);
+
+        this.add(titleLabel);
+        this.add(accountLabel);
+        this.add(verificationCodeLabel);
+
+        this.updateUI();
+    }
+
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
+    public static class ActionButton {
+
+        public static JPanel back(KeyItem parent) {
+            final boolean[] hover = new boolean[]{false};
+            JPanel panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (hover[0]) g.setColor(OryColors.RED.darker());
+                    else g.setColor(OryColors.RED);
+                    if (this.getWidth() >= this.getHeight()) {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(this.getWidth() / 2 - this.getHeight() / 2,0,this.getHeight(),this.getHeight(),25,25));
+                        g.drawImage(Icons.backIcon.getScaledInstance(this.getHeight(), this.getHeight(), Image.SCALE_SMOOTH),this.getWidth() / 2 - this.getHeight() / 2,0,null);
+                    } else {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(0, this.getHeight() / 2 - this.getWidth() / 2, this.getWidth(), this.getWidth(), 25,25));
+                        g.drawImage(Icons.backIcon.getScaledInstance(this.getWidth(), this.getWidth(), Image.SCALE_SMOOTH),0, this.getHeight() / 2 - this.getWidth() / 2,null);
+                    }
+                }
+            };
+            panel.setOpaque(false);
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    parent.hideButtons();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    hover[0] = true;
+                    panel.repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hover[0] = false;
+                    panel.repaint();
+                }
+            });
+
+            return panel;
+        }
+
+        public static JPanel edit(KeyItem parent) {
+            final boolean[] hover = new boolean[]{false};
+            JPanel panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (hover[0]) g.setColor(OryColors.RED.darker());
+                    else g.setColor(OryColors.RED);
+                    if (this.getWidth() >= this.getHeight()) {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(this.getWidth() / 2 - this.getHeight() / 2,0,this.getHeight(),this.getHeight(),25,25));
+                        g.drawImage(Icons.editIcon.getScaledInstance(this.getHeight(), this.getHeight(), Image.SCALE_SMOOTH),this.getWidth() / 2 - this.getHeight() / 2,0,null);
+                    } else {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(0, this.getHeight() / 2 - this.getWidth() / 2, this.getWidth(), this.getWidth(), 25,25));
+                        g.drawImage(Icons.editIcon.getScaledInstance(this.getWidth(), this.getWidth(), Image.SCALE_SMOOTH),0, this.getHeight() / 2 - this.getWidth() / 2,null);
+                    }
+                }
+            };
+            panel.setOpaque(false);
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    parent.hideButtons();
+                    parent.changeEditMode();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    hover[0] = true;
+                    panel.repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hover[0] = false;
+                    panel.repaint();
+                }
+            });
+
+            return panel;
+        }
+
+        public static JPanel remove(KeyItem parent) {
+            final boolean[] hover = new boolean[]{false};
+            JPanel panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (hover[0]) g.setColor(OryColors.RED.darker());
+                    else g.setColor(OryColors.RED);
+                    if (this.getWidth() >= this.getHeight()) {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(this.getWidth() / 2 - this.getHeight() / 2,0,this.getHeight(),this.getHeight(),25,25));
+                        g.drawImage(Icons.deleteIcon.getScaledInstance(this.getHeight(), this.getHeight(), Image.SCALE_SMOOTH),this.getWidth() / 2 - this.getHeight() / 2,0,null);
+                    } else {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(0, this.getHeight() / 2 - this.getWidth() / 2, this.getWidth(), this.getWidth(), 25,25));
+                        g.drawImage(Icons.deleteIcon.getScaledInstance(this.getWidth(), this.getWidth(), Image.SCALE_SMOOTH),0, this.getHeight() / 2 - this.getWidth() / 2,null);
+                    }
+                }
+            };
+            panel.setOpaque(false);
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int reply = JOptionPane.showConfirmDialog(parent,"Are you sure you want to delete this entry? \n This cannot be undone!", "Permanent Deletion" , JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        MainFrame.codesPanel.remove(parent);
+                        MainFrame.codesPanel.updateUI();
+                        Storage.keys.remove(parent);
+                        Storage.saveKeys();
+                    }
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    hover[0] = true;
+                    panel.repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hover[0] = false;
+                    panel.repaint();
+                }
+            });
+
+            return panel;
+        }
+
+        public static JPanel copy(KeyItem parent) {
+            final boolean[] hover = new boolean[]{false};
+            JPanel panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (hover[0]) g.setColor(OryColors.RED.darker());
+                    else g.setColor(OryColors.RED);
+                    if (this.getWidth() >= this.getHeight()) {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(this.getWidth() / 2 - this.getHeight() / 2,0,this.getHeight(),this.getHeight(),25,25));
+                        g.drawImage(Icons.copyIcon.getScaledInstance(this.getHeight(), this.getHeight(), Image.SCALE_SMOOTH),this.getWidth() / 2 - this.getHeight() / 2,0,null);
+                    } else {
+                        ((Graphics2D)g).fill(new RoundRectangle2D.Double(0, this.getHeight() / 2 - this.getWidth() / 2, this.getWidth(), this.getWidth(), 25,25));
+                        g.drawImage(Icons.copyIcon.getScaledInstance(this.getWidth(), this.getWidth(), Image.SCALE_SMOOTH),0, this.getHeight() / 2 - this.getWidth() / 2,null);
+                    }
+                }
+            };
+            panel.setOpaque(false);
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    parent.hideButtons();
+                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(Generator.getVerificationCode(parent.key)),null);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    hover[0] = true;
+                    panel.repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hover[0] = false;
+                    panel.repaint();
+                }
+            });
+
+            return panel;
+        }
     }
 }

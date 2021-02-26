@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.IOException;
 
 public class Authenticator {
     public static void main(String[] args) {
@@ -8,6 +9,11 @@ public class Authenticator {
             e.printStackTrace();
         }
         Storage.loadKeys();
+        try {
+            Icons.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new MainFrame();
     }
 }

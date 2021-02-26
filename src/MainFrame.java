@@ -5,12 +5,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainFrame extends JFrame {
 
-    private JPanel codesPanel;
+    static JPanel codesPanel;
 
     public MainFrame() {
         super("Java Authenticator");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(300,500);
+        this.setSize(400,600);
 
         JPanel basePanel = new JPanel(new GridBagLayout());
         basePanel.setBackground(Color.white);
@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
     }
 
     private JPanel topPanel() {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel(new GridLayout(0,1)) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -33,6 +33,7 @@ public class MainFrame extends JFrame {
             }
         };
         panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
         AtomicInteger startRemaining = new AtomicInteger(Time.getRemainingTime());
         JLabel label = new JLabel("Remaining time: " + startRemaining);
@@ -59,9 +60,13 @@ public class MainFrame extends JFrame {
         panel.add(label);
 
         JButton addNew = new JButton("Add new secret");
-        addNew.setPreferredSize(new Dimension(200,30));
         addNew.setFont(new Font("Arial", Font.PLAIN,16));
-        addNew.addActionListener(e -> codesPanel.add(new KeyItem(),0));
+        addNew.addActionListener(e -> {
+            KeyItem newItem = new KeyItem();
+            Storage.keys.add(newItem);
+            codesPanel.add(newItem,0);
+            codesPanel.updateUI();
+        });
 
         panel.add(addNew);
 
