@@ -41,25 +41,25 @@ public class Storage {
         if (!home.exists()) {
             //noinspection ResultOfMethodCallIgnored
             home.mkdirs();
-            JSONObject rootObject = new JSONObject();
-            JSONArray keyArray = new JSONArray();
-            JSONObject current;
-            for (KeyItem item : keys) {
-                current = new JSONObject();
-                current.put("title", item.title);
-                current.put("account", item.account);
-                current.put("key", item.key);
-                keyArray.put(current);
-            }
-            rootObject.put("keys", keyArray);
+        }
+        JSONObject rootObject = new JSONObject();
+        JSONArray keyArray = new JSONArray();
+        JSONObject current;
+        for (KeyItem item : keys) {
+            current = new JSONObject();
+            current.put("title", item.title);
+            current.put("account", item.account);
+            current.put("key", item.key);
+            keyArray.put(current);
+        }
+        rootObject.put("keys", keyArray);
 
-            try {
-                FileWriter writer = new FileWriter(keysJSON);
-                writer.write(rootObject.toString());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            FileWriter writer = new FileWriter(keysJSON);
+            writer.write(rootObject.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainFrame extends JFrame {
 
-    private JPanel basePanel;
     private JPanel codesPanel;
 
     public MainFrame() {
@@ -13,7 +12,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(300,500);
 
-        basePanel = new JPanel(new GridBagLayout());
+        JPanel basePanel = new JPanel(new GridBagLayout());
         basePanel.setBackground(Color.white);
 
         addGB(basePanel, topPanel(),0,0.1,new Insets(10,10,5,10));
@@ -40,7 +39,7 @@ public class MainFrame extends JFrame {
         label.setFont(new Font("Helvetica", Font.PLAIN, 18));
 
         new Thread(() -> {
-            while (startRemaining.get() >= 1) {
+            while (startRemaining.get() >= 0) {
                 try {
                     //noinspection BusyWait
                     Thread.sleep(1000); //While program works this loop will never be cancelled so noinspection here
@@ -60,6 +59,8 @@ public class MainFrame extends JFrame {
         panel.add(label);
 
         JButton addNew = new JButton("Add new secret");
+        addNew.setPreferredSize(new Dimension(200,30));
+        addNew.setFont(new Font("Arial", Font.PLAIN,16));
         addNew.addActionListener(e -> codesPanel.add(new KeyItem(),0));
 
         panel.add(addNew);
