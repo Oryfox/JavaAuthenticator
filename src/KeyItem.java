@@ -57,12 +57,18 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
         {
             titleField = new JTextField();
             titleField.setFont(font);
+            new GhostText(titleField,"Title");
+            titleField.setForeground(Color.BLACK);
 
             accountField = new JTextField();
             accountField.setFont(font);
+            new GhostText(accountField,"Account");
+            accountField.setForeground(Color.BLACK);
 
             secretField = new JTextField();
             secretField.setFont(font);
+            new GhostText(secretField,"Secret");
+            secretField.setForeground(Color.BLACK);
 
             titleField.addKeyListener(new KeyListener() {
                 @Override
@@ -77,7 +83,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
@@ -96,7 +102,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
@@ -115,7 +121,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
@@ -154,14 +160,17 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
             titleField = new JTextField();
             titleField.setFont(font);
             this.add(titleField);
+            new GhostText(titleField,"Title");
 
             accountField = new JTextField();
             accountField.setFont(font);
             this.add(accountField);
+            new GhostText(accountField,"Account");
 
             secretField = new JTextField();
             secretField.setFont(font);
             this.add(secretField);
+            new GhostText(secretField,"Secret");
 
             titleField.addKeyListener(new KeyListener() {
                 @Override
@@ -176,7 +185,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
@@ -195,7 +204,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
@@ -214,7 +223,7 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals(""))) {
+                    if (e.getKeyChar() == '\n' && (!titleField.getText().equals("") && !accountField.getText().equals("") && !secretField.getText().equals("") && !titleField.getText().equals("Title") && !accountField.getText().equals("Account") && !secretField.getText().equals("Secret"))) {
                         changeEditMode();
                         Storage.saveKeys();
                     }
