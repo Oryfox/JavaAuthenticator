@@ -1,20 +1,23 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainFrame extends JFrame {
 
     JPanel basePanel;
     static JPanel codesPanel;
+    JScrollPane aboutScrollPane;
+
+    boolean showingAbout = false;
 
     public MainFrame() {
         super("Java Authenticator");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(400, 600);
-
+        this.setJMenuBar(createJMenuBar());
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("icons/lock.png")));
 
         basePanel = new JPanel(new GridBagLayout());
@@ -42,11 +45,7 @@ public class MainFrame extends JFrame {
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel remainingPlusAbout = new JPanel(new GridLayout(1, 0));
-        remainingPlusAbout.setOpaque(false);
-
-        AtomicInteger startRemaining = new AtomicInteger(Time.getRemainingTime());
-        JLabel label = new JLabel("Remaining time: " + startRemaining);
+        JLabel label = new JLabel("Remaining time: " + Time.getRemainingTime());
         label.setFont(new Font("Helvetica", Font.PLAIN, 18));
         new Thread(() -> {
             while (true) {
@@ -56,34 +55,15 @@ public class MainFrame extends JFrame {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (startRemaining.get() == 30) {
-                    for (KeyItem item : Storage.keys) item.updateVerificationCode();
-                }
-                label.setText("Remaining time: " + startRemaining.decrementAndGet());
-                if (startRemaining.get() <= 0) {
-                    startRemaining.set(30);
-                }
+                int time = Time.getRemainingTime();
+                label.setText("Remaining time: " + time);
+                if (time == 30)
+                    for (KeyItem item : Storage.keys)
+                        item.updateVerificationCode();
             }
         }).start();
-        remainingPlusAbout.add(label);
 
-        JButton aboutButton = new JButton("About Authenticator");
-        aboutButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        aboutButton.addActionListener(e -> showAbout());
-        remainingPlusAbout.add(aboutButton);
-
-        panel.add(remainingPlusAbout);
-
-        JButton addNew = new JButton("Add new secret");
-        addNew.setFont(new Font("Arial", Font.PLAIN, 16));
-        addNew.addActionListener(e -> {
-            KeyItem newItem = new KeyItem();
-            Storage.keys.add(newItem);
-            codesPanel.add(newItem, 0);
-            codesPanel.updateUI();
-        });
-
-        panel.add(addNew);
+        panel.add(label);
 
         return panel;
     }
@@ -106,32 +86,76 @@ public class MainFrame extends JFrame {
         return scrollPane;
     }
 
-    private void showAbout() {
-        JScrollPane aboutScrollPane = new JScrollPane();
-        aboutScrollPane.getVerticalScrollBar().setUnitIncrement(5);
-        aboutScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        aboutScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+    private JMenuBar createJMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
 
-        JPanel dependencyHolder = new JPanel(new GridLayout(0, 1));
-        dependencyHolder.setBackground(Color.WHITE);
+        JMenu fileMenu = new JMenu("File");
 
-        RoundedButton closeAboutButton = new RoundedButton("Back", e -> {
+        JMenuItem addNewSecretItem = new JMenuItem("Add empty secret");
+        addNewSecretItem.addActionListener(e -> {
+            KeyItem newItem = new KeyItem();
+            Storage.keys.add(newItem);
+            codesPanel.add(newItem, 0);
+            codesPanel.updateUI();
+        });
+        fileMenu.add(addNewSecretItem);
+
+        JMenuItem addNewItemFromQR = new JMenuItem("Add from QR code");
+        addNewItemFromQR.addActionListener(e -> {
+            FileDialog dialog = new FileDialog(this);
+            dialog.setMultipleMode(false);
+            dialog.setVisible(true);
+            try {
+                KeyItem newItem = QRCodeProcessing.getKeyItemFrom(ImageIO.read(dialog.getFiles()[0]));
+                Storage.keys.add(newItem);
+                codesPanel.add(newItem, 0);
+                codesPanel.updateUI();
+                Storage.saveKeys();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        fileMenu.add(addNewItemFromQR);
+
+        JMenu aboutMenu = new JMenu("About");
+
+        JMenuItem aboutItem = new JMenuItem("About Authenticator");
+        aboutItem.addActionListener(e -> toggleAbout());
+        aboutMenu.add(aboutItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(aboutMenu);
+        return menuBar;
+    }
+
+    private void toggleAbout() {
+        showingAbout = !showingAbout;
+        if (showingAbout) {
+            aboutScrollPane = new JScrollPane();
+            aboutScrollPane.getVerticalScrollBar().setUnitIncrement(5);
+            aboutScrollPane.setBorder(BorderFactory.createEmptyBorder());
+            aboutScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+            JPanel dependencyHolder = new JPanel(new GridLayout(0, 1));
+            dependencyHolder.setBackground(Color.WHITE);
+
+            RoundedButton closeAboutButton = new RoundedButton("Back", e -> this.toggleAbout(), OryColors.YELLOW);
+            dependencyHolder.add(closeAboutButton);
+
+            dependencyHolder.add(new DependencyItem("apache/commons-codec", "https://github.com/apache/commons-codec"));
+            dependencyHolder.add(new DependencyItem("stleary/JSON-java", "https://github.com/stleary/JSON-java"));
+            dependencyHolder.add(new DependencyItem("samdjstevens/java-totp", "https://github.com/samdjstevens/java-totp"));
+            dependencyHolder.add(new DependencyItem("Akaya Telivigala Font", "https://fonts.google.com/specimen/Akaya+Telivigala"));
+            dependencyHolder.add(new DependencyItem("zxing/zxing", "https://github.com/zxing/zxing"));
+
+            aboutScrollPane.setViewportView(dependencyHolder);
+
+            this.remove(basePanel);
+            this.add(aboutScrollPane);
+        } else {
             this.remove(aboutScrollPane);
             this.add(basePanel);
-            this.validate();
-            this.repaint();
-        }, OryColors.YELLOW);
-        dependencyHolder.add(closeAboutButton);
-
-        dependencyHolder.add(new DependencyItem("apache/commons-codec", "https://github.com/apache/commons-codec"));
-        dependencyHolder.add(new DependencyItem("stleary/JSON-java", "https://github.com/stleary/JSON-java"));
-        dependencyHolder.add(new DependencyItem("samdjstevens/java-totp", "https://github.com/samdjstevens/java-totp"));
-        dependencyHolder.add(new DependencyItem("Akaya Telivigala Font", "https://fonts.google.com/specimen/Akaya+Telivigala"));
-
-        aboutScrollPane.setViewportView(dependencyHolder);
-
-        this.remove(basePanel);
-        this.add(aboutScrollPane);
+        }
         this.validate();
         this.repaint();
     }
@@ -155,6 +179,7 @@ public class MainFrame extends JFrame {
             super(new GridLayout(0, 1));
             this.setOpaque(false);
             this.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
+            this.setPreferredSize(new Dimension(0,120));
 
             JLabel titleLabel = new JLabel(title);
             try {
