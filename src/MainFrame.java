@@ -117,6 +117,26 @@ public class MainFrame extends JFrame {
         });
         fileMenu.add(addNewItemFromQR);
 
+        JMenuItem takeScreenShotAndAdd = new JMenuItem("Add from QR Code Screenshot");
+        takeScreenShotAndAdd.addActionListener(e -> {
+            try {
+                KeyItem newItem = QRCodeProcessing.getKeyItemFrom(new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())));
+                Storage.keys.add(newItem);
+                codesPanel.add(newItem, 0);
+                codesPanel.updateUI();
+                Storage.saveKeys();
+            } catch (AWTException awtException) {
+                awtException.printStackTrace();
+            }
+        });
+        fileMenu.add(takeScreenShotAndAdd);
+
+        fileMenu.add(new JSeparator());
+
+        JMenuItem quitItem = new JMenuItem("Quit");
+        quitItem.addActionListener(e -> System.exit(0));
+        fileMenu.add(quitItem);
+
         JMenu aboutMenu = new JMenu("About");
 
         JMenuItem aboutItem = new JMenuItem("About Authenticator");
