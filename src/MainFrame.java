@@ -34,7 +34,7 @@ public class MainFrame extends JFrame {
     }
 
     private JPanel topPanel() {
-        JPanel panel = new JPanel(new GridLayout(0, 1)) {
+        JPanel panel = new JPanel(new GridLayout(1,0)) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -47,6 +47,9 @@ public class MainFrame extends JFrame {
 
         JLabel label = new JLabel("Remaining time: " + Time.getRemainingTime());
         label.setFont(new Font("Helvetica", Font.PLAIN, 18));
+
+        RoundProgressBar progressBar = new RoundProgressBar(OryColors.PURPLE);
+
         new Thread(() -> {
             while (true) {
                 try {
@@ -57,6 +60,7 @@ public class MainFrame extends JFrame {
                 }
                 int time = Time.getRemainingTime();
                 label.setText("Remaining time: " + time);
+                progressBar.setProgress((int)(((double) time / 30) * 100));
                 if (time == 30)
                     for (KeyItem item : Storage.keys)
                         item.updateVerificationCode();
@@ -64,6 +68,7 @@ public class MainFrame extends JFrame {
         }).start();
 
         panel.add(label);
+        panel.add(progressBar);
 
         return panel;
     }
