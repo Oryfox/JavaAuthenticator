@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import javax.swing.*;
 import java.io.IOException;
 

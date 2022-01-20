@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import dev.samstevens.totp.time.SystemTimeProvider;
 
 public class Time {
@@ -9,5 +11,5 @@ public class Time {
     public static int getRemainingTime() {
         long time = getSystemTime();
         return (int) (30 - time % 30);
-    } //Time until next reset. 30s period
+    } //de.oryfox.totpauthenticator.Time until next reset. 30s period
 }

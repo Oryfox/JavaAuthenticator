@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import java.awt.*;
 
 public class OryColors {

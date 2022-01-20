@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;

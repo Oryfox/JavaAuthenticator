@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +20,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(400, 600);
         this.setJMenuBar(createJMenuBar());
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("icons/lock.png")));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getClassLoader().getResource("icons/lock.png")));
 
         basePanel = new JPanel(new GridBagLayout());
         basePanel.setBackground(Color.white);
@@ -208,7 +210,7 @@ public class MainFrame extends JFrame {
 
             JLabel titleLabel = new JLabel(title);
             try {
-                Font font = Font.createFont(Font.TRUETYPE_FONT, MainFrame.class.getResourceAsStream("fonts/AkayaTelivigala-Regular.ttf"));
+                Font font = Font.createFont(Font.TRUETYPE_FONT, MainFrame.class.getClassLoader().getResourceAsStream("fonts/AkayaTelivigala-Regular.ttf"));
                 titleLabel.setFont(font.deriveFont(Font.PLAIN, 26));
             } catch (FontFormatException | IOException e) {
                 e.printStackTrace();

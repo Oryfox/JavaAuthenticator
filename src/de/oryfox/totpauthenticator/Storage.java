@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

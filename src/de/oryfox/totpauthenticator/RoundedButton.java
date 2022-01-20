@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -22,7 +24,7 @@ public class RoundedButton extends JPanel implements MouseListener {
 
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("fonts/AkayaTelivigala-Regular.ttf"));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("fonts/AkayaTelivigala-Regular.ttf"));
             label.setFont(font.deriveFont(Font.PLAIN, fontSize));
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();

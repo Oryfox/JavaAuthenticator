@@ -1,3 +1,5 @@
+package de.oryfox.totpauthenticator;
+
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.exceptions.CodeGenerationException;
 
