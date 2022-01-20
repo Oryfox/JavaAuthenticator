@@ -3,7 +3,10 @@ package de.oryfox.totpauthenticator;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class KeyItem extends JPanel implements Comparable<KeyItem> {
@@ -17,7 +20,6 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
     JLabel verificationCodeLabel;
 
     JPanel backButton;
-    JPanel qrCodeButton;
     JPanel editButton;
     JPanel removeButton;
     JPanel copyButton;
@@ -27,9 +29,6 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
     JTextField secretField;
 
     boolean editMode = false;
-
-
-    static Font font = new Font("Arial", Font.PLAIN, 16);
 
     public KeyItem(String title, String account, String key) {
         this.title = title;
@@ -44,31 +43,31 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
         {
             titleLabel = new JLabel(title);
-            titleLabel.setFont(font);
+            titleLabel.setFont(MainFrame.font);
             this.add(titleLabel);
 
             accountLabel = new JLabel(account);
-            accountLabel.setFont(font);
+            accountLabel.setFont(MainFrame.font);
             this.add(accountLabel);
 
             verificationCodeLabel = new JLabel(Generator.getVerificationCode(key));
-            verificationCodeLabel.setFont(font);
+            verificationCodeLabel.setFont(MainFrame.font);
             this.add(verificationCodeLabel);
         } //Labels
 
         {
             titleField = new JTextField();
-            titleField.setFont(font);
+            titleField.setFont(MainFrame.font);
             new GhostText(titleField,"Title");
             titleField.setForeground(Color.BLACK);
 
             accountField = new JTextField();
-            accountField.setFont(font);
+            accountField.setFont(MainFrame.font);
             new GhostText(accountField,"Account");
             accountField.setForeground(Color.BLACK);
 
             secretField = new JTextField();
-            secretField.setFont(font);
+            secretField.setFont(MainFrame.font);
             new GhostText(secretField,"Secret");
             secretField.setForeground(Color.BLACK);
 
@@ -149,28 +148,28 @@ public class KeyItem extends JPanel implements Comparable<KeyItem> {
 
         {
             titleLabel = new JLabel();
-            titleLabel.setFont(font);
+            titleLabel.setFont(MainFrame.font);
 
             accountLabel = new JLabel();
-            accountLabel.setFont(font);
+            accountLabel.setFont(MainFrame.font);
 
             verificationCodeLabel = new JLabel();
-            verificationCodeLabel.setFont(font);
+            verificationCodeLabel.setFont(MainFrame.font);
         } //Labels
 
         {
             titleField = new JTextField();
-            titleField.setFont(font);
+            titleField.setFont(MainFrame.font);
             this.add(titleField);
             new GhostText(titleField,"Title");
 
             accountField = new JTextField();
-            accountField.setFont(font);
+            accountField.setFont(MainFrame.font);
             this.add(accountField);
             new GhostText(accountField,"Account");
 
             secretField = new JTextField();
-            secretField.setFont(font);
+            secretField.setFont(MainFrame.font);
             this.add(secretField);
             new GhostText(secretField,"Secret");
 

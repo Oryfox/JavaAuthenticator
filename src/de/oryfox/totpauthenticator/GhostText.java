@@ -24,20 +24,7 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
         this.registerListeners();
         this.updateState();
         if (!this.textField.hasFocus()) {
-            this.focusLost((FocusEvent)null);
-        }
-
-    }
-
-    protected GhostText(JTextField textField, String ghostText, Color color) {
-        this.textField = textField;
-        this.ghostText = ghostText;
-        this.ghostColor = color;
-        textField.addFocusListener(this);
-        this.registerListeners();
-        this.updateState();
-        if (!this.textField.hasFocus()) {
-            this.focusLost((FocusEvent)null);
+            this.focusLost(null);
         }
 
     }

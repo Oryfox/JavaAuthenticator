@@ -11,9 +11,8 @@ public class MainFrame extends JFrame {
 
     JPanel basePanel;
     static JPanel codesPanel;
-    JScrollPane aboutScrollPane;
 
-    boolean showingAbout = false;
+    public static Font font = new Font("Arial", Font.PLAIN, 16);
 
     public MainFrame() {
         super("Java Authenticator");
@@ -50,8 +49,6 @@ public class MainFrame extends JFrame {
         JLabel label = new JLabel("Remaining time: " + Time.getRemainingTime());
         label.setFont(new Font("Helvetica", Font.PLAIN, 18));
 
-        RoundProgressBar progressBar = new RoundProgressBar(OryColors.PURPLE);
-
         new Thread(() -> {
             while (true) {
                 try {
@@ -62,7 +59,6 @@ public class MainFrame extends JFrame {
                 }
                 int time = Time.getRemainingTime();
                 label.setText("Remaining time: " + time);
-                progressBar.setProgress((int)(((double) time / 30) * 100));
                 if (time == 30)
                     for (KeyItem item : Storage.keys)
                         item.updateVerificationCode();
@@ -70,7 +66,6 @@ public class MainFrame extends JFrame {
         }).start();
 
         panel.add(label);
-        panel.add(progressBar);
 
         return panel;
     }
@@ -147,44 +142,18 @@ public class MainFrame extends JFrame {
         JMenu aboutMenu = new JMenu("About");
 
         JMenuItem aboutItem = new JMenuItem("About Authenticator");
-        aboutItem.addActionListener(e -> toggleAbout());
+        aboutItem.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(URI.create("https://github.com/Oryfox/JavaAuthenticator/blob/dev/Acknowledgement.md"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
         aboutMenu.add(aboutItem);
 
         menuBar.add(fileMenu);
         menuBar.add(aboutMenu);
         return menuBar;
-    }
-
-    private void toggleAbout() {
-        showingAbout = !showingAbout;
-        if (showingAbout) {
-            aboutScrollPane = new JScrollPane();
-            aboutScrollPane.getVerticalScrollBar().setUnitIncrement(5);
-            aboutScrollPane.setBorder(BorderFactory.createEmptyBorder());
-            aboutScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
-
-            JPanel dependencyHolder = new JPanel(new GridLayout(0, 1));
-            dependencyHolder.setBackground(Color.WHITE);
-
-            RoundedButton closeAboutButton = new RoundedButton("Back", e -> this.toggleAbout(), OryColors.YELLOW);
-            dependencyHolder.add(closeAboutButton);
-
-            dependencyHolder.add(new DependencyItem("apache/commons-codec", "https://github.com/apache/commons-codec"));
-            dependencyHolder.add(new DependencyItem("stleary/JSON-java", "https://github.com/stleary/JSON-java"));
-            dependencyHolder.add(new DependencyItem("samdjstevens/java-totp", "https://github.com/samdjstevens/java-totp"));
-            dependencyHolder.add(new DependencyItem("Akaya Telivigala Font", "https://fonts.google.com/specimen/Akaya+Telivigala"));
-            dependencyHolder.add(new DependencyItem("zxing/zxing", "https://github.com/zxing/zxing"));
-
-            aboutScrollPane.setViewportView(dependencyHolder);
-
-            this.remove(basePanel);
-            this.add(aboutScrollPane);
-        } else {
-            this.remove(aboutScrollPane);
-            this.add(basePanel);
-        }
-        this.validate();
-        this.repaint();
     }
 
     private static void addGB(JComponent parent, Component component, int gridy, double weighty, Insets insets) {
@@ -198,39 +167,5 @@ public class MainFrame extends JFrame {
         constraints.weighty = weighty;
         constraints.insets = insets;
         parent.add(component, constraints);
-    }
-
-    public static class DependencyItem extends JPanel {
-
-        public DependencyItem(String title, String url) {
-            super(new GridLayout(0, 1));
-            this.setOpaque(false);
-            this.setBorder(BorderFactory.createEmptyBorder(5, 15, 10, 15));
-            this.setPreferredSize(new Dimension(0,120));
-
-            JLabel titleLabel = new JLabel(title);
-            try {
-                Font font = Font.createFont(Font.TRUETYPE_FONT, MainFrame.class.getClassLoader().getResourceAsStream("fonts/AkayaTelivigala-Regular.ttf"));
-                titleLabel.setFont(font.deriveFont(Font.PLAIN, 26));
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
-            this.add(titleLabel);
-
-            this.add(new RoundedButton("Open in web", e -> {
-                try {
-                    Desktop.getDesktop().browse(URI.create(url));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }, OryColors.BLUE, 22));
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.setColor(OryColors.PURPLE);
-            ((Graphics2D) g).fill(new RoundRectangle2D.Double(10, 10, this.getWidth() - 20, this.getHeight() - 20, 25, 25));
-        }
     }
 }
