@@ -3,6 +3,7 @@ package de.oryfox.totpauthenticator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,29 +14,57 @@ public class Storage {
 
     private static final File home = new File(System.getProperty("user.home") + "/.github-oryfox/java-authenticator");
     private static final File keysJSON = new File(home.getAbsolutePath() + "/keys.json");
+    public static final File password = new File(home.getAbsolutePath() + "/password");
 
     public static void loadKeys() {
         StringBuilder builder = new StringBuilder();
         String line;
-        if (keysJSON.exists()) {
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(keysJSON));
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-                reader.close();
+        if (password.exists()) {
+            Crypto.readPassword();
 
-                JSONObject rootObject = new JSONObject(builder.toString());
-                JSONArray keys = rootObject.getJSONArray("keys");
-                JSONObject current;
-                for (int i = 0; i < keys.length(); i++) {
-                    current = keys.getJSONObject(i);
-                    Storage.keys.add(new KeyItem(current.getString("title"), current.getString("account"), current.getString("key")));
+            if (keysJSON.exists()) {
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(keysJSON));
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    reader.close();
+
+                    JSONObject rootObject = new JSONObject(builder.toString());
+                    JSONArray keys = rootObject.getJSONArray("keys");
+                    JSONObject current;
+                    for (int i = 0; i < keys.length(); i++) {
+                        current = keys.getJSONObject(i);
+                        Storage.keys.add(new KeyItem(current.getString("title"), current.getString("account"), current.getString("key")));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else saveKeys();
+            } else saveKeys();
+        } else {
+            Crypto.createPassword();
+
+            if (keysJSON.exists()) {
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(keysJSON));
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    reader.close();
+
+                    JSONObject rootObject = new JSONObject(builder.toString());
+                    JSONArray keys = rootObject.getJSONArray("keys");
+                    JSONObject current;
+                    for (int i = 0; i < keys.length(); i++) {
+                        current = keys.getJSONObject(i);
+                        Storage.keys.add(new KeyItem(current.getString("title"), current.getString("account"), current.getString("key")));
+                    }
+                    saveKeys();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else saveKeys();
+        }
     }
 
     public static void saveKeys() {

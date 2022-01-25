@@ -15,3 +15,7 @@
 
 - [zxing/zxing](https://github.com/zxing/zxing) \
     under the [Apache License 2.0](https://github.com/zxing/zxing/blob/master/LICENSE)
+
+
+- [patrickfav/bcrypt](https://github.com/patrickfav/bcrypt) \
+    under the [Apache License 2.0](https://github.com/patrickfav/bcrypt/blob/master/LICENSE)
